@@ -23,22 +23,36 @@ class Ball {
         this.y = y;
         this.radius = radius;
         this.color = color;
-        this.radians = 0;
+        this.radians = Math.random() * Math.PI * 2;
         this.velocity = 0.05;
+        this.mult = randomIntFromRange(70, 150);
+        this.lastMouse = { x: x, y: y };
     }
 
     update() {
+        const lastPoint = { x: this.x, y: this.y }
+
+        //move points
         this.radians += this.velocity;
-        this.x = this.x + Math.cos(this.radians);
-        this.y = this.y + Math.sin(this.radians);
-        this.draw();
+
+
+        //Drag effect
+        this.lastMouse.x += (mouse.x - this.lastMouse.x) * 0.05; 
+        this.lastMouse.y += (mouse.y - this.lastMouse.y) * 0.05; 
+
+        //circular motion
+        this.x = this.lastMouse.x + Math.cos(this.radians) * this.mult;
+        this.y = this.lastMouse.y + Math.sin(this.radians) * this.mult;
+        this.draw(lastPoint);
     }
 
-    draw() {
+    draw(lastPoint) {
         c.beginPath();
-        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        c.fillStyle = this.color;
-        c.fill();
+        c.strokeStyle = this.color;
+        c.lineWidth = this.radius;
+        c.moveTo(lastPoint.x, lastPoint.y);
+        c.lineTo(this.x, this.y);
+        c.stroke();
         c.closePath();
     }
 }
@@ -48,6 +62,8 @@ class Ball {
 addEventListener('mousemove', (event) => {
     mouse.x = event.clientX;
     mouse.y = event.clientY;
+
+
 })
 
 addEventListener('resize', () => {
@@ -57,22 +73,22 @@ addEventListener('resize', () => {
     init();
 })
 
-addEventListener("click", () => {
-    init();
-})
+// addEventListener("click", () => {
+//     init();
+// })
 
 
 // // Implementation
 let balls;
 function init() {
     balls = [];
-
-    for (let i = 0; i < 1; i++) {
-        balls.push(new Ball(canvas.width / 2, canvas.height / 2, 5, 'blue'));
+    for (let i = 0; i < 100; i++) {
+        const radius = (Math.random() * 10) + 1;
+        const color = randomColor(colors);
+        balls.push(new Ball(canvas.width / 2, canvas.height / 2, radius, color));
 
     }
 
-    console.log(balls);
 }
 
 
@@ -80,7 +96,8 @@ function init() {
 // // Animation Loop
 function animate() {
     requestAnimationFrame(animate);
-    c.clearRect(0, 0, canvas.width, canvas.height);
+    c.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    c.fillRect(0, 0, canvas.width, canvas.height);
 
     balls.forEach(ball => {
         ball.update();
