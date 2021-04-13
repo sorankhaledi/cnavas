@@ -9,13 +9,17 @@ const c = canvas.getContext('2d');
 
 
 
-const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66'];
+const colors = ['#f4a261', '#e9c46a', '#2a9d8f', '#264653'];
 
 
 let mouse = {
     x: innerWidth / 2,
     y: innerHeight / 2
 };
+
+
+let min = 40;
+let max = 70;
 
 class Ball {
     constructor(x, y, radius, color) {
@@ -25,7 +29,7 @@ class Ball {
         this.color = color;
         this.radians = Math.random() * Math.PI * 2;
         this.velocity = 0.05;
-        this.mult = randomIntFromRange(70, 150);
+        this.mult = randomIntFromRange(min, max);
         this.lastMouse = { x: x, y: y };
     }
 
@@ -64,14 +68,21 @@ addEventListener('mousemove', (event) => {
     mouse.y = event.clientY;
 
 
-})
+});
+
+
+addEventListener('touchmove', (event) => {
+    mouse.x = event.touches[0].clientX;
+    mouse.y = event.touches[0].clientY;
+});
+
 
 addEventListener('resize', () => {
     canvas.width = innerWidth;
     canvas.height = innerHeight;
 
     init();
-})
+});
 
 // addEventListener("click", () => {
 //     init();
@@ -81,6 +92,21 @@ addEventListener('resize', () => {
 // // Implementation
 let balls;
 function init() {
+    if(innerWidth <= 600) {
+        min = 30;
+        max = 40;
+    } else if(innerWidth > 600 && innerWidth < 960) {
+        min = 50;
+        max = 80;
+    } else if(innerWidth >= 960 && innerWidth < 1264) {
+        min = 60;
+        max = 100;
+    } else {
+        min = 70;
+        max = 150;
+    }
+
+
     balls = [];
     for (let i = 0; i < 100; i++) {
         const radius = (Math.random() * 10) + 1;

@@ -9,7 +9,7 @@ const c = canvas.getContext('2d');
 
 
 
-const colors = ['#2185C5', '#7ECEFD', '#FF7F66'];
+const colors = ['#001524', '#15616d', '#ff7d00', '#78290f'];
 
 let mouse = {
     x: innerWidth / 2,
@@ -135,19 +135,38 @@ addEventListener('mousemove', (event) => {
 });
 
 
+addEventListener('touchmove', (event) => {
+    mouse.x = event.touches[0].clientX;
+    mouse.y = event.touches[0].clientY;
+});
+
+
 addEventListener('resize', () => {
     canvas.width = innerWidth;
     canvas.height = innerHeight;
 
     init();
-})
+});
 
 
 // // Implementation
 let balls = [];
+let maxBalls;
 function init() {
+
+    if(innerWidth <= 600) {
+        maxBalls = 40;
+    } else if(innerWidth > 600 && innerWidth < 960) {
+        maxBalls = 80;
+    } else if(innerWidth >= 960 && innerWidth < 1264) {
+        maxBalls = 110;
+    } else {
+        maxBalls = 200;
+    }
+
+
     balls = [];
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < maxBalls; i++) {
         let radius = 15;
         let x = randomIntFromRange(radius, canvas.width - radius);
         let y = randomIntFromRange(radius, canvas.height - radius);
