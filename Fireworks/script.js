@@ -9,7 +9,7 @@ let mouse = {
     y: innerHeight / 2
 }
 
-const gravity = 0.005;
+const gravity = 0.03;
 const friction = 0.99;
 
 
@@ -48,7 +48,7 @@ class Particle{
         this.y += this.velocity.y;
 
         //to fade them out as they go down
-        this.opacity -= 0.005;
+        this.opacity -= 0.003;
     }
 }
 
@@ -66,7 +66,7 @@ addEventListener("click", (event) => {
 
     const max = 400;
     const radian = (Math.PI * 2) / max;
-    const power = 5;
+    const power = 10;
 
     for (let i = 0; i < max; i++) {
 
