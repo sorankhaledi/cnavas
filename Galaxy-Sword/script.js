@@ -27,10 +27,16 @@ addEventListener("mousemove", (event) => {
     mouse.x = event.clientX - center.x;
     mouse.y = event.clientY - center.y;
 
-    console.log(mouse);
-
     angle = Math.atan2(mouse.y, mouse.x);
 });
+
+addEventListener("touchmove", event => {
+
+    mouse.x = event.touches[0].clientX - center.x;
+    mouse.y = event.touches[0].clientY - center.y;
+
+    angle = Math.atan2(mouse.y, mouse.x);
+})
 
 
 addEventListener("resize", () => {
@@ -70,7 +76,12 @@ let particles;
 function init() {
     particles = [];
 
+
     const particlesCount = 300;
+
+    if(innerWidth < 600) {
+        particlesCount = 100;
+    }
     const hueIncrement = 360 / particlesCount;
 
     for (let i = 0; i < particlesCount; i++) {

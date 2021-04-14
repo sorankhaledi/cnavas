@@ -1,0 +1,77 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: black;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.score{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    color: white;
+    z-index: 10;
+    user-select: none;
+}
+
+.modal {
+    background: transparent;
+    position: relative;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+}
+
+.modal .bg-white {
+    width: 400px;
+    height: 150px;
+    background-color: white;
+    display: block;
+    text-align: center;
+    padding: 10px;
+    margin: 0 auto;
+    margin-top: 40%;
+}
+
+.modal .bg-white h1 {
+    margin: 5px 0;
+}
+
+.modal .bg-white p {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.modal .bg-white .btn-wrapper {
+    display: felx;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal .bg-white .btn-wrapper .btn {
+    font-size: 18px;
+    padding: 15px 20px;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.6);
+    background-color: hsl(157, 60%, 60%);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal .bg-white .btn-wrapper .btn:hover {
+    background-color: hsl(157, 40%, 40%);
+    color: white;
+}
