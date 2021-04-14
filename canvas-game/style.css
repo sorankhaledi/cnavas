@@ -27,12 +27,15 @@ canvas {
 
 .modal {
     background: transparent;
-    position: relative;
+    position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 10;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal .bg-white {
@@ -42,8 +45,6 @@ canvas {
     display: block;
     text-align: center;
     padding: 10px;
-    margin: 0 auto;
-    margin-top: 40%;
 }
 
 .modal .bg-white h1 {
