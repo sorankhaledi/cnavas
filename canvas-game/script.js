@@ -182,8 +182,9 @@ function Init() {
     modalScore.innerHTML = score;
 }
 
+let enemyInterval;
 function spawnEnemies() {
-    setInterval(() => {
+    enemyInterval = setInterval(() => {
         const radius = Math.random() * (30 - 10) + 10;
         let x;
         let y;
@@ -200,9 +201,10 @@ function spawnEnemies() {
         const color = `hsl(${Math.random() * 360}, 50%, 50%)`;
         let angle = Math.atan2(center.y - y, center.x - x);
 
+        let randomNum = Math.random() * (3 - 2) + 2; 
         const velocity = {
-            x: Math.cos(angle),
-            y: Math.sin(angle)
+            x: Math.cos(angle) * randomNum,
+            y: Math.sin(angle) * randomNum
         }
         enemies.push(new Enemy(x, y, radius, color, velocity));
     }, 1000);
@@ -253,6 +255,7 @@ function animate() {
             modalScore.innerHTML = score;
             modal.style.display = 'flex';
             gameIsRunning = false;
+            clearInterval(enemyInterval);
         }
 
         // check if we hit enemies by projectiles
