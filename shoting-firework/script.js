@@ -12,7 +12,8 @@ let mouse = {
 
 let isMouseDown = false;
 let add = 0;
-let gravity = 1;
+let gravity = 0.01;
+let friction = 0.99
 
 
 class Rect {
@@ -53,18 +54,39 @@ class Projectile {
         this.radius = radius;
         this.color = color;
         this.velocity = velocity;
+        this.opacity = 1;
     }
 
     draw() {
+        c.save();
+        c.globalAlpha = this.opacity;
         c.beginPath();
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        c.shadowColor = this.color;
+        c.shadowBlur = 10;
+        c.shadowOffsetX = 0;
+        c.shadowOffsetY = 0;
         c.fillStyle = this.color;
         c.fill();
         c.closePath();
+        c.restore();
     }
 
     update() {
         this.draw();
+
+        //to slow them down by time
+        this.velocity.x *= friction; 
+        this.velocity.y *= friction; 
+
+        //make them go down 
+        this.velocity.y += gravity;
+
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+
+        //to fade them out as they go down
+        this.opacity -= 0.009;
     }
 }
 
@@ -81,7 +103,7 @@ class Bullet {
         this.draw();
         this.x += this.velocity.x;
         this.y += this.velocity.y;
-        this.y += gravity;
+        this.velocity.y += 0.07;
     }
 
     draw() {
@@ -93,9 +115,10 @@ class Bullet {
     }
 }
 
-let bullets;
 let cannon;
+let bullets;
 let range;
+let projectiles;
 
 window.addEventListener("mousemove", (event) => {
     mouse.x = event.clientX;
@@ -118,18 +141,27 @@ addEventListener("mousedown", () => {
 
 addEventListener("mouseup", () => {
     isMouseDown = false;
-})
+});
+
+addEventListener("touchstart", () => {
+    isMouseDown = true;
+});
+
+addEventListener("touchend", () => {
+    isMouseDown = false;
+});
 
 
 
 
 function animate() {
     requestAnimationFrame(animate);
-    c.fillStyle = `rgba(0, 0, 0, .2)`;
+    c.fillStyle = `rgba(18, 18, 18, 0.2)`;
     c.fillRect(0, 0, innerWidth, innerHeight);
 
     cannon.update();
 
+    // shoting bullets
     if(isMouseDown) {
         add++;
         if(add % 5 === 0) {
@@ -140,10 +172,10 @@ function animate() {
             y = y + canvas.height;
         
             const velocity = {
-                x: Math.cos(cannon.angle) * 10,
-                y: Math.sin(cannon.angle) * 10
+                x: Math.cos(cannon.angle) * 8,
+                y: Math.sin(cannon.angle) * 8
             }
-            bullets.push(new Bullet(x, y, 9, "blue", velocity));
+            bullets.push(new Bullet(x, y, 9, "white", velocity));
         }
     }
 
@@ -151,7 +183,24 @@ function animate() {
         if (Math.hypot(canvas.width / 2 - bullet.x, canvas.height - bullet.y) < range) {
             bullet.update();
         } else {
+            let max = Math.random() * (50 - 30) + 30;
+            let power = (Math.random() * (12 - 8) + 8);
+            for(let i=0;i< max; i++) {
+                projectiles.push(new Projectile(bullet.x, bullet.y, 3, `hsl(${Math.random() * 360}, 50%, 50%)`, {
+                    x: (Math.random() - 0.5) * power, 
+                    y: (Math.random() - 0.5) * power
+                }));
+            }
             bullets.splice(i, 1);
+        }
+    });
+
+
+    projectiles.forEach((projectile, i) => {
+        if(projectile.opacity > 0) {
+            projectile.update();
+        } else {
+            projectiles.splice(i, 1);
         }
     })
 
@@ -167,6 +216,7 @@ function init() {
         "white"
     );
     bullets = [];
+    projectiles = [];
 
     isMouseDown = false;
     add = 0;
@@ -174,7 +224,9 @@ function init() {
     if(innerWidth <= 600) {
         range = 200;
     } else if(innerWidth > 600 && innerWidth < 960) {
-        range = 400;
+        range = 350;
+    } else if(innerWidth >= 960 && innerWidth < 1264) {
+        range = 550;
     } else {
         range = canvas.height / 2;
     }
